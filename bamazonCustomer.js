@@ -15,8 +15,8 @@ let db = mysql.createConnection({
 
 // turn on connection to database
 db.connect((err) => {
-  if (error) {
-    throw error;
+  if (err) {
+    throw err;
   }
   // run the start function after the connection is made
 
@@ -29,15 +29,18 @@ db.query("select * from products", ((error, results) => {
   if (error) {
     throw error;
   } else {
-    console.log("=========================================================================");
-    console.log("          *** Here Are The Top 10 Products On Bamazon ***                ");
-    console.log("=========================================================================");
+    console.log("========================================================");
+    console.log("   *** Here Are The Top 10 Products On Bamazon ***      ");
+    console.log("========================================================");
     for (i = 0; i < results.length; i++) {
-      console.log("=========================================================================");
+      console.log("========================================================");
       console.log("Item Id - " + results[i].id);
-      console.log("------------")
-      console.log("Product -= " + results[i].product_name + " =- Price - $ " + results[i].price.toFixed(2));
-      console.log("=========================================================================");
+      console.log("------------------------------");
+      console.log("Product - " + results[i].product_name);
+      console.log("------------------------------");
+      console.log("Price - $" + results[i].price.toFixed(2));
+      console.log("========================================================");
+      console.log("                                                        ");
     }
     start();
   }
@@ -64,7 +67,7 @@ let start = () => {
   ]).then((answers) => {
 
     checkStock(answers);
-
+  console.log("                                                       ");
   });
 }
 
@@ -76,22 +79,22 @@ let checkStock = (item) => {
 
     let stockItem = results;
 
-    console.log("=========================================================================");
+    console.log("=======================================================");
     console.log("You Selected " + stockItem[0].product_name);
 
     if (results.stock_quantity > item.quantity, error) {
       console.log(" Insufficient quantity! ")
 
     } else {
-      console.log("------------------------------------------------------------------------");
+      console.log("--------------------------------------------------------");
       console.log("Thanks For Your Order");
-      executePurchase(item, stockItem);
+      purchaseItem(item, stockItem);
     }
 
   });
 }
 
-let executePurchase = (Item, itemStock) => {
+let purchaseItem = (Item, itemStock) => {
   let query = "UPDATE products SET ? WHERE ?";
   let totalPrice = itemStock[0].price * Item.quantity;
   let newQuantity = itemStock[0].stock_quantity - Item.quantity;
@@ -106,11 +109,9 @@ let executePurchase = (Item, itemStock) => {
     if (error) {
       throw error;
     } else {
-      console.log("------------------------------------------------------------------------");
-      console.log("Your Purchase Was Sucessful");
-      console.log("------------------------------------------------------------------------");
+      console.log("--------------------------------------------------------");
       console.log("Your Total  $" + totalPrice.toFixed(2));
-      console.log("=========================================================================");
+      console.log("========================================================");
       itemUpdate(Item);
     }
   });
